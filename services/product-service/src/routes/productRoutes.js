@@ -1,14 +1,17 @@
 const express = require("express");
 
 const router = express.Router();
+
+
 const {
-    getCategories 
+    getCategories,
+     getProducts
 } = require("../controllers/productController");
 
 
-router.get("/", (req, res) => {
-  res.send("Get Products Route");
-});
+
+
+router.get("/", getProducts);
 
 router.get("/categories", getCategories);
 
