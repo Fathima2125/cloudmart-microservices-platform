@@ -5,7 +5,9 @@ const router = express.Router();
 
 const {
     getCategories,
-     getProducts
+    getProducts,
+    getProductById,
+    createProduct
 } = require("../controllers/productController");
 
 
@@ -15,9 +17,9 @@ router.get("/", getProducts);
 
 router.get("/categories", getCategories);
 
-router.get("/:id", (req, res) => {
-  res.send("Get Product By ID Route");
-});
+router.get("/:id", getProductById);
+
+router.post("/", createProduct);
 
 module.exports = router;
 
