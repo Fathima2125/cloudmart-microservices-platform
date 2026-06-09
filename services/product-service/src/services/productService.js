@@ -15,26 +15,43 @@ const getCategories = async () => {
     };
 };
 
-const getProducts = async () => {
-    const result = await pool.query(
-        `SELECT 
-        p.id,
-        p.name,
-        p.description,
-        p.price,
-        p.stock_quantity,
-        c.name AS category
+const getProducts = async (search, category) => {
+
+  let query = `
+    SELECT
+      p.id,
+      p.name,
+      p.description,
+      p.price,
+      p.stock_quantity,
+      c.name AS category
     FROM products p
     JOIN categories c
       ON p.category_id = c.id
-    ORDER BY p.id
-    `
-    );
+    WHERE 1=1
+  `;
 
-    return {
-         success: true,
-         data: result.rows
-    };
+  const values = [];
+
+  if (search) {
+    values.push(`%${search}%`);
+    query += ` AND p.name ILIKE $${values.length}`;
+  }
+
+  if (category) {
+    values.push(category);
+    query += ` AND p.category_id = $${values.length}`;
+  }
+
+  query += ` ORDER BY p.id`;
+
+  const result =
+    await pool.query(query, values);
+
+  return {
+    success: true,
+    data: result.rows
+  };
 };
 
 const getProductById = async (id) => {
@@ -113,10 +130,82 @@ const createProduct = async ({
   };
 };
 
+const updateProduct = async (
+  id,
+  {
+    name,
+    description,
+    price,
+    stock_quantity,
+    category_id
+  }
+) => {
+
+  const existingProduct = await pool.query(
+    "SELECT * FROM products WHERE id = $1",
+    [id]
+  );
+
+  if (existingProduct.rows.length === 0) {
+    throw new Error("Product not found");
+  }
+
+  const result = await pool.query(
+    `
+    UPDATE products
+    SET
+      name = $1,
+      description = $2,
+      price = $3,
+      stock_quantity = $4,
+      category_id = $5
+    WHERE id = $6
+    RETURNING *
+    `,
+    [
+      name,
+      description,
+      price,
+      stock_quantity,
+      category_id,
+      id
+    ]
+  );
+
+  return {
+    success: true,
+    message: "Product updated successfully",
+    data: result.rows[0]
+  };
+};
+
+const deleteProduct = async (id) => {
+
+  const existingProduct = await pool.query(
+    "SELECT * FROM products WHERE id = $1",
+    [id]
+  );
+
+  if (existingProduct.rows.length === 0) {
+    throw new Error("Product not found");
+  }
+
+  await pool.query(
+    "DELETE FROM products WHERE id = $1",
+    [id]
+  );
+
+  return {
+    success: true,
+    message: "Product deleted successfully"
+  };
+};
 
 module.exports = {
     getCategories,
     getProducts,
     getProductById,
-    createProduct
+    createProduct,
+    updateProduct,
+    deleteProduct
 };
