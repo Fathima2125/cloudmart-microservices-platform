@@ -46,16 +46,52 @@ async ({
 
 };
 
+// const getCart =
+// async (userId) => {
+
+//   const result =
+//   await pool.query(
+//     `
+//     SELECT *
+//     FROM cart_items
+//     WHERE user_id = $1
+//     ORDER BY id
+//     `,
+//     [userId]
+//   );
+
+//   return {
+//     success: true,
+//     data: result.rows
+//   };
+
+// };
+
 const getCart =
 async (userId) => {
 
   const result =
   await pool.query(
     `
-    SELECT *
-    FROM cart_items
-    WHERE user_id = $1
-    ORDER BY id
+    SELECT
+      c.id,
+      c.user_id,
+      c.product_id,
+      c.quantity,
+
+      p.name AS product_name,
+      p.description,
+      p.price,
+      p.stock_quantity
+
+    FROM cart_items c
+
+    JOIN products p
+      ON c.product_id = p.id
+
+    WHERE c.user_id = $1
+
+    ORDER BY c.id
     `,
     [userId]
   );

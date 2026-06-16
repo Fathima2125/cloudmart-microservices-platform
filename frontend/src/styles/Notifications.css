@@ -1,0 +1,19 @@
+.notifications-list {
+  display: grid;
+  gap: 14px;
+}
+
+.notification-card {
+  display: grid;
+  gap: 8px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  padding: 18px;
+  box-shadow: 0 10px 32px rgba(29, 48, 79, 0.08);
+}
+
+.notification-card small {
+  color: var(--primary-dark);
+  font-weight: 800;
+}

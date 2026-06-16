@@ -1,0 +1,117 @@
+.home-page {
+  width: min(1120px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 36px 0 64px;
+}
+
+.hero-section {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(280px, 0.9fr);
+  gap: 34px;
+  align-items: center;
+  min-height: 520px;
+}
+
+.hero-copy p {
+  max-width: 620px;
+  margin-top: 18px;
+  font-size: 1.08rem;
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 28px;
+}
+
+.hero-device {
+  min-height: 360px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background:
+    linear-gradient(135deg, rgba(247, 183, 49, 0.2), transparent 42%),
+    linear-gradient(160deg, #ffffff, #e8f1ff);
+  display: grid;
+  place-items: center;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.hero-device img {
+  width: min(78%, 330px);
+  filter: drop-shadow(0 30px 35px rgba(17, 103, 177, 0.22));
+}
+
+.category-strip {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.category-strip a,
+.value-grid article {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: 0 10px 30px rgba(29, 48, 79, 0.07);
+}
+
+.category-strip a {
+  display: grid;
+  place-items: center;
+  min-height: 72px;
+  color: var(--primary-dark);
+  font-weight: 800;
+}
+
+.category-strip a:hover {
+  border-color: rgba(17, 103, 177, 0.35);
+  background: var(--surface-soft);
+}
+
+.value-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 18px;
+}
+
+.value-grid article {
+  padding: 22px;
+}
+
+.value-grid span {
+  color: var(--accent);
+  font-weight: 900;
+}
+
+.value-grid h3 {
+  margin-top: 12px;
+  margin-bottom: 8px;
+}
+
+@media (max-width: 860px) {
+  .home-page {
+    width: min(100% - 24px, 1120px);
+    padding-top: 24px;
+  }
+
+  .hero-section,
+  .value-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-section {
+    min-height: auto;
+  }
+
+  .hero-device {
+    min-height: 300px;
+  }
+
+  .category-strip {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

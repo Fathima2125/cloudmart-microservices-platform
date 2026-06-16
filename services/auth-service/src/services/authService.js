@@ -28,7 +28,7 @@ await pool.query(
 );
 
 return {
-    success:"true",
+    success:true,
     message: "User registered successfully",
 
 };
@@ -78,6 +78,12 @@ const loginUser=async ({email, password })=> {
     return {
         success: true,
         token,
+        user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role
+        }
 
     };
 

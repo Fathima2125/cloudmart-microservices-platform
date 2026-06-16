@@ -24,25 +24,40 @@ async (req, res) => {
 
 };
 
-const getNotifications =
-async (req, res) => {
+// const getNotifications =
+// async (req, res) => {
 
+//   try {
+
+//     const result =
+//     await notificationService.getNotifications();
+
+//     res.status(200).json(result);
+
+//   } catch (error) {
+
+//     res.status(500).json({
+//       success: false,
+//       message: error.message
+//     });
+
+//   }
+
+// };
+
+const getNotificationsByUser = async (req, res) => {
   try {
-
-    const result =
-    await notificationService.getNotifications();
+    const result = await notificationService.getNotificationsByUser(
+      req.params.userId
+    );
 
     res.status(200).json(result);
-
   } catch (error) {
-
     res.status(500).json({
       success: false,
       message: error.message
     });
-
   }
-
 };
 
 const getNotificationById =
@@ -92,8 +107,13 @@ async (req, res) => {
 };
 
 module.exports = {
-  createNotification,
-  getNotifications,
-  getNotificationById,
-  deleteNotification
+//   createNotification,
+//   getNotifications,
+//   getNotificationById,
+//   deleteNotification,
+//   getNotificationsByUser
+    createNotification,
+    getNotificationsByUser,
+    getNotificationById,
+    deleteNotification
 };

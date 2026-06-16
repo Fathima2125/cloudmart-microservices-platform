@@ -1,0 +1,56 @@
+.orders-list {
+  display: grid;
+  gap: 14px;
+}
+
+.order-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  padding: 18px;
+  box-shadow: 0 10px 32px rgba(29, 48, 79, 0.08);
+}
+
+.order-card h3 {
+  margin-bottom: 6px;
+}
+
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 34px;
+  padding: 0 12px;
+  border-radius: 999px;
+  background: var(--surface-soft);
+  color: var(--primary-dark);
+  font-size: 0.86rem;
+  font-weight: 900;
+  text-transform: capitalize;
+}
+
+.status-pending {
+  background: rgba(247, 183, 49, 0.18);
+  color: #946000;
+}
+
+.status-shipped {
+  background: rgba(17, 103, 177, 0.12);
+  color: var(--primary-dark);
+}
+
+.status-delivered {
+  background: rgba(22, 138, 80, 0.13);
+  color: var(--success);
+}
+
+@media (max-width: 620px) {
+  .order-card {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}

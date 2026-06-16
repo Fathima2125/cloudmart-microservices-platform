@@ -1,6 +1,7 @@
 const pool =
 require("../config/db");
 
+const axios = require("axios");
 const createOrder =
 async ({ user_id, items }) => {
 
@@ -67,6 +68,18 @@ async ({ user_id, items }) => {
 
   }
 
+//   await createNotification(
+//   user_id,
+
+//   `Your order #${order.id} has been placed successfully`
+// );
+
+await axios.post("http://localhost:5005/api/notifications",{
+  user_id,
+  type: "ORDER",
+  message: `Your order #${order.id} has been placed successfully`,
+  order_id: order.id
+});
   return {
     success: true,
     message:
@@ -164,18 +177,56 @@ async (
     );
   }
 
+  const order =
+    result.rows[0];
+
+  if (status === "SHIPPED") {
+
+    await axios.post(
+      "http://localhost:5005/api/notifications",
+      {
+        user_id: order.user_id,
+        type: "ORDER",
+        message:
+          `Your order #${order.id} has been shipped successfully`,
+        order_id: order.id
+      }
+    );
+
+  }
+
+  if (status === "DELIVERED") {
+
+    await axios.post(
+      "http://localhost:5005/api/notifications",
+      {
+        user_id: order.user_id,
+        type: "ORDER",
+        message:
+          `Your order #${order.id} has been delivered successfully`,
+        order_id: order.id
+      }
+    );
+
+  }
+
   return {
     success: true,
     message:
       "Order status updated",
-    data: result.rows[0]
+    data: order
   };
 
 };
+
+
+
+
 
 module.exports = {
   createOrder,
   getOrders,
   getOrderById,
-  updateOrderStatus
+  updateOrderStatus,
+  
 };
