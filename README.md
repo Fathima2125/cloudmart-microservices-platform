@@ -1,4 +1,4 @@
-# Production Grade Cloud Native E-Commerce Platform
+# Production Grade Cloud Native E-Commerce Platform (CloudMart)
 Microservice-based E-Commerce Platform built using:
 
 - React
