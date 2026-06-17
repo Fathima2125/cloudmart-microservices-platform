@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "http://localhost:5001/api/v1/auth"
+  baseURL: import.meta.env.VITE_AUTH_API_URL
 });
 
 export const registerUser = (userData) => {

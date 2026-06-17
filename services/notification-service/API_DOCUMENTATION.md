@@ -61,7 +61,7 @@ GET /api/notifications
 
 ### Endpoint
 
-GET /api/notifications/:id
+GET /api/notifications/:id.  // GET   http://localhost:5005/api/notifications/user/1
 
 Example:
 

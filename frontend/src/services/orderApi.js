@@ -2,7 +2,7 @@ import axios from "axios";
 
 const API = axios.create({
   baseURL:
-    "http://localhost:5003/api/v1/orders"
+    import.meta.env.VITE_ORDER_API_URL
 });
 
 export const createOrder = (

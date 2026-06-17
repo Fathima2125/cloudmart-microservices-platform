@@ -19,7 +19,7 @@ app.use(
 const PORT =
 process.env.PORT || 5005;
 
-app.listen(PORT, () => {
+app.listen(PORT,"0.0.0.0", () => {
   console.log(
     `Notification Service running on port ${PORT}`
   );

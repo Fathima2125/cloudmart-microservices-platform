@@ -74,7 +74,7 @@ async ({ user_id, items }) => {
 //   `Your order #${order.id} has been placed successfully`
 // );
 
-await axios.post("http://localhost:5005/api/notifications",{
+await axios.post("http://notification-service:5005/api/notifications",{
   user_id,
   type: "ORDER",
   message: `Your order #${order.id} has been placed successfully`,
@@ -183,7 +183,7 @@ async (
   if (status === "SHIPPED") {
 
     await axios.post(
-      "http://localhost:5005/api/notifications",
+      "http://notification-service:5005/api/notifications",
       {
         user_id: order.user_id,
         type: "ORDER",
@@ -198,7 +198,7 @@ async (
   if (status === "DELIVERED") {
 
     await axios.post(
-      "http://localhost:5005/api/notifications",
+      "http://notification-service:5005/api/notifications",
       {
         user_id: order.user_id,
         type: "ORDER",

@@ -4,7 +4,7 @@ const API =
   axios.create({
 
     baseURL:
-      "http://localhost:5002/api/v1/products"
+      import.meta.env.VITE_PRODUCT_API_URL
 
   });
 

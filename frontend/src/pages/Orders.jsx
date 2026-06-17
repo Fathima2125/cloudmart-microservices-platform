@@ -106,9 +106,9 @@ function Orders() {
                     </p>
                   </div>
 
-                  <span className={`status-pill status-${order.status.toLowerCase()}`}>
+                  <span className={`status-pill status-${(order.status || "PENDING").toLowerCase()}`}>
                     {
-                      order.status
+                      order.status || "PENDING"
                     }
                   </span>
 
