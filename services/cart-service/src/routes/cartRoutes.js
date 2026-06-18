@@ -12,17 +12,24 @@ const {
   "../controllers/cartController"
 );
 
+const {
+  authenticate
+} = require("../middleware/authMiddleware");
+
+router.use(authenticate);
+
 router.post("/", addToCart);
+
+router.get("/", getCart);
 
 router.get("/:userId", getCart);
 
 router.put("/:itemId", updateCartItem);
 
-router.delete("/:itemId", deleteCartItem);
+router.delete("/", clearCart);
 
-router.delete(
-  "/user/:userId",
-  clearCart
-);
+router.delete("/user/:userId", clearCart);
+
+router.delete("/:itemId", deleteCartItem);
 
 module.exports = router;

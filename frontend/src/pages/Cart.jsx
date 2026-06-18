@@ -22,7 +22,7 @@ function Cart() {
       }
 
       try {
-        const res = await getCartByUser(userId);
+        const res = await getCartByUser();
         setCartItems(res.data.data);
       } catch (err) {
         console.log(err);

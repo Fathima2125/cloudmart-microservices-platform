@@ -126,7 +126,10 @@ const getNotificationsByUser = async (userId) => {
 
 
 const getNotificationById =
-async (id) => {
+async (user, id) => {
+
+  const isAdmin =
+    user.role === "admin";
 
   const result =
   await pool.query(
@@ -134,8 +137,9 @@ async (id) => {
     SELECT *
     FROM notifications
     WHERE id = $1
+      ${isAdmin ? "" : "AND user_id = $2"}
     `,
-    [id]
+    isAdmin ? [id] : [id, user.userId]
   );
 
   if (
@@ -156,16 +160,20 @@ async (id) => {
 
 
 const deleteNotification =
-async (id) => {
+async (user, id) => {
+
+  const isAdmin =
+    user.role === "admin";
 
   const result =
   await pool.query(
     `
     DELETE FROM notifications
     WHERE id = $1
+      ${isAdmin ? "" : "AND user_id = $2"}
     RETURNING *
     `,
-    [id]
+    isAdmin ? [id] : [id, user.userId]
   );
 
   if (
@@ -191,5 +199,4 @@ module.exports = {
   deleteNotification,
   getNotificationsByUser
 };
-
 

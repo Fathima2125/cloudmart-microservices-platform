@@ -2,14 +2,15 @@ const pool =
 require("../config/db");
 
 const addToCart =
-async ({
-  user_id,
+async (
+  userId,
+  {
   product_id,
   quantity
 }) => {
 
   if (
-    !user_id ||
+    !userId ||
     !product_id ||
     !quantity
   ) {
@@ -31,7 +32,7 @@ async ({
     RETURNING *
     `,
     [
-      user_id,
+      userId,
       product_id,
       quantity
     ]
@@ -105,6 +106,7 @@ async (userId) => {
 
 const updateCartItem =
 async (
+  userId,
   itemId,
   quantity
 ) => {
@@ -115,11 +117,13 @@ async (
     UPDATE cart_items
     SET quantity = $1
     WHERE id = $2
+      AND user_id = $3
     RETURNING *
     `,
     [
       quantity,
-      itemId
+      itemId,
+      userId
     ]
   );
 
@@ -141,16 +145,17 @@ async (
 };
 
 const deleteCartItem =
-async (itemId) => {
+async (userId, itemId) => {
 
   const result =
   await pool.query(
     `
     DELETE FROM cart_items
     WHERE id = $1
+      AND user_id = $2
     RETURNING *
     `,
-    [itemId]
+    [itemId, userId]
   );
 
   if (

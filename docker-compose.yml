@@ -21,6 +21,13 @@ services:
       - postgres_data:/var/lib/postgresql/data
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
 
+  redis:
+    image: redis:7-alpine
+
+    container_name: cloudmart-redis
+
+    restart: always
+
   auth-service:
     build: ./services/auth-service
 
@@ -48,6 +55,7 @@ services:
 
     depends_on:
       - postgres
+      - redis
 
   order-service:
     build: ./services/order-service
@@ -108,4 +116,3 @@ services:
 
 volumes:
   postgres_data:
-

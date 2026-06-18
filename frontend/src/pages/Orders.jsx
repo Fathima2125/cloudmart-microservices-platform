@@ -4,6 +4,10 @@ import {
 } from "react";
 
 import {
+  Link
+} from "react-router-dom";
+
+import {
   getOrders
 } from "../services/orderApi";
 
@@ -20,10 +24,20 @@ function Orders() {
   setLoading] =
   useState(true);
 
+  const user =
+    JSON.parse(
+      localStorage.getItem("user")
+    );
+
   useEffect(() => {
 
     const fetchOrders =
     async () => {
+
+      if (!user?.id) {
+        setLoading(false);
+        return;
+      }
 
       try {
 
@@ -48,7 +62,7 @@ function Orders() {
 
     fetchOrders();
 
-  }, []);
+  }, [user?.id]);
 
   if (loading) {
 
@@ -60,6 +74,20 @@ function Orders() {
       </div>
     );
 
+  }
+
+  if (!user?.id) {
+    return (
+      <section className="orders-page page-container">
+        <div className="empty-state">
+          <h2>Please login first</h2>
+          <p>Login to view your private order history.</p>
+          <Link to="/login" className="primary-link">
+            Login
+          </Link>
+        </div>
+      </section>
+    );
   }
 
   return (

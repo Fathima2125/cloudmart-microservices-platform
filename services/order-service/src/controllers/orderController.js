@@ -8,6 +8,7 @@ async (req, res) => {
 
     const result =
     await orderService.createOrder(
+      req.user.userId,
       req.body
     );
 
@@ -30,7 +31,7 @@ async (req, res) => {
   try {
 
     const result =
-    await orderService.getOrders();
+    await orderService.getOrders(req.user);
 
     res.status(200).json(result);
 
@@ -52,6 +53,7 @@ async (req, res) => {
 
     const result =
     await orderService.getOrderById(
+      req.user,
       req.params.id
     );
 

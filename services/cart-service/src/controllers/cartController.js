@@ -8,6 +8,7 @@ async (req, res) => {
 
     const result =
     await cartService.addToCart(
+      req.user.userId,
       req.body
     );
 
@@ -31,7 +32,7 @@ async (req, res) => {
 
     const result =
     await cartService.getCart(
-      req.params.userId
+      req.user.userId
     );
 
     res.status(200).json(result);
@@ -54,6 +55,7 @@ async (req, res) => {
 
     const result =
     await cartService.updateCartItem(
+      req.user.userId,
       req.params.itemId,
       req.body.quantity
     );
@@ -78,6 +80,7 @@ async (req, res) => {
 
     const result =
     await cartService.deleteCartItem(
+      req.user.userId,
       req.params.itemId
     );
 
@@ -101,7 +104,7 @@ async (req, res) => {
 
     const result =
     await cartService.clearCart(
-      req.params.userId
+      req.user.userId
     );
 
     res.status(200).json(result);

@@ -47,8 +47,21 @@ async (req, res) => {
 
 const getNotificationsByUser = async (req, res) => {
   try {
+    const requestedUserId =
+      req.params.userId || req.user.userId;
+
+    if (
+      req.user.role !== "admin" &&
+      Number(requestedUserId) !== Number(req.user.userId)
+    ) {
+      return res.status(403).json({
+        success: false,
+        message: "You can only view your own notifications"
+      });
+    }
+
     const result = await notificationService.getNotificationsByUser(
-      req.params.userId
+      requestedUserId
     );
 
     res.status(200).json(result);
@@ -67,6 +80,7 @@ async (req, res) => {
 
     const result =
     await notificationService.getNotificationById(
+      req.user,
       req.params.id
     );
 
@@ -90,6 +104,7 @@ async (req, res) => {
 
     const result =
     await notificationService.deleteNotification(
+      req.user,
       req.params.id
     );
 

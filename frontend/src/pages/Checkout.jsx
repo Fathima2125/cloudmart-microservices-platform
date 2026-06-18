@@ -17,6 +17,7 @@ import {
 } from "../services/cartApi";
 
 import {
+  Link,
   useNavigate
 } from "react-router-dom";
 
@@ -30,6 +31,11 @@ function Checkout() {
 
   const navigate =
     useNavigate();
+
+  const user =
+    JSON.parse(
+      localStorage.getItem("user")
+    );
 
   const totalAmount =
     cartItems.reduce(
@@ -50,30 +56,19 @@ function Checkout() {
 
       try {
 
-        const user =
-          JSON.parse(
-            localStorage.getItem(
-              "user"
-            )
-          );
+        if (!user?.id) {
+          alert("Please login first");
+          navigate("/login");
+          return;
+        }
 
-          console.log({
-                user_id: user.id,
-                total_amount: totalAmount
-            });
             await createOrder({
-
-                user_id:
-                 user.id,
-
             items:
                 cartItems
 
             });     
 
-        await clearCart(
-          user.id
-        );
+        await clearCart();
 
         setCartItems([]);
 
@@ -105,6 +100,15 @@ function Checkout() {
         <p>Confirm your CloudMart order details before placing the order.</p>
       </div>
 
+      {!user?.id ? (
+        <div className="empty-state">
+          <h2>Please login first</h2>
+          <p>Login to place orders from your saved cart.</p>
+          <Link to="/login" className="primary-link">
+            Login
+          </Link>
+        </div>
+      ) : (
       <div className="checkout-layout">
         <div className="checkout-list">
 
@@ -161,6 +165,7 @@ function Checkout() {
           </button>
         </aside>
       </div>
+      )}
 
     </section>
 

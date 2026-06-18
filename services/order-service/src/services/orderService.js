@@ -3,10 +3,10 @@ require("../config/db");
 
 const axios = require("axios");
 const createOrder =
-async ({ user_id, items }) => {
+async (userId, { items }) => {
 
   if (
-    !user_id ||
+    !userId ||
     !items ||
     items.length === 0
   ) {
@@ -15,14 +15,54 @@ async ({ user_id, items }) => {
     );
   }
 
+  const orderItems = [];
   let totalAmount = 0;
 
-  items.forEach(item => {
+  for (const item of items) {
+    const quantity =
+      Number(item.quantity);
+
+    if (
+      !item.product_id ||
+      !Number.isInteger(quantity) ||
+      quantity <= 0
+    ) {
+      throw new Error(
+        "Each item needs a valid product and quantity"
+      );
+    }
+
+    const productResult =
+    await pool.query(
+      `
+      SELECT id, price
+      FROM products
+      WHERE id = $1
+      `,
+      [item.product_id]
+    );
+
+    const product =
+      productResult.rows[0];
+
+    if (!product) {
+      throw new Error(
+        "Product not found"
+      );
+    }
+
+    const price =
+      Number(product.price);
 
     totalAmount +=
-      item.price * item.quantity;
+      price * quantity;
 
-  });
+    orderItems.push({
+      product_id: product.id,
+      quantity,
+      price
+    });
+  }
 
   const orderResult =
   await pool.query(
@@ -36,7 +76,7 @@ async ({ user_id, items }) => {
     RETURNING *
     `,
     [
-      user_id,
+      userId,
       totalAmount
     ]
   );
@@ -44,7 +84,7 @@ async ({ user_id, items }) => {
   const order =
   orderResult.rows[0];
 
-  for (const item of items) {
+  for (const item of orderItems) {
 
     await pool.query(
       `
@@ -74,12 +114,20 @@ async ({ user_id, items }) => {
 //   `Your order #${order.id} has been placed successfully`
 // );
 
-await axios.post("http://notification-service:5005/api/notifications",{
-  user_id,
-  type: "ORDER",
-  message: `Your order #${order.id} has been placed successfully`,
-  order_id: order.id
-});
+await axios.post(
+  "http://notification-service:5005/api/notifications",
+  {
+    user_id: userId,
+    type: "ORDER",
+    message: `Your order #${order.id} has been placed successfully`,
+    order_id: order.id
+  },
+  {
+    headers: {
+      "x-internal-service-token": process.env.INTERNAL_SERVICE_TOKEN
+    }
+  }
+);
   return {
     success: true,
     message:
@@ -90,15 +138,20 @@ await axios.post("http://notification-service:5005/api/notifications",{
 };
 
 const getOrders =
-async () => {
+async (user) => {
+
+  const isAdmin =
+    user.role === "admin";
 
   const result =
   await pool.query(
     `
     SELECT *
     FROM orders
+    ${isAdmin ? "" : "WHERE user_id = $1"}
     ORDER BY id DESC
-    `
+    `,
+    isAdmin ? [] : [user.userId]
   );
 
   return {
@@ -109,7 +162,10 @@ async () => {
 };
 
 const getOrderById =
-async (id) => {
+async (user, id) => {
+
+  const isAdmin =
+    user.role === "admin";
 
   const order =
   await pool.query(
@@ -117,8 +173,9 @@ async (id) => {
     SELECT *
     FROM orders
     WHERE id = $1
+      ${isAdmin ? "" : "AND user_id = $2"}
     `,
-    [id]
+    isAdmin ? [id] : [id, user.userId]
   );
 
   if (
@@ -190,6 +247,11 @@ async (
         message:
           `Your order #${order.id} has been shipped successfully`,
         order_id: order.id
+      },
+      {
+        headers: {
+          "x-internal-service-token": process.env.INTERNAL_SERVICE_TOKEN
+        }
       }
     );
 
@@ -205,6 +267,11 @@ async (
         message:
           `Your order #${order.id} has been delivered successfully`,
         order_id: order.id
+      },
+      {
+        headers: {
+          "x-internal-service-token": process.env.INTERNAL_SERVICE_TOKEN
+        }
       }
     );
 

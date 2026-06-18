@@ -11,6 +11,13 @@ const {
   "../controllers/orderController"
 );
 
+const {
+  authenticate,
+  requireAdmin
+} = require("../middleware/authMiddleware");
+
+router.use(authenticate);
+
 router.post("/", createOrder);
 
 router.get("/", getOrders);
@@ -19,6 +26,7 @@ router.get("/:id", getOrderById);
 
 router.put(
   "/:id/status",
+  requireAdmin,
   updateOrderStatus
 );
 

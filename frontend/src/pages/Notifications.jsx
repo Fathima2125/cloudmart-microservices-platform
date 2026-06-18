@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { getNotifications } from "../services/notificationApi";
 
 import "../styles/Notifications.css";
@@ -6,18 +7,17 @@ import "../styles/Notifications.css";
 function Notifications() {
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
+  const user = JSON.parse(localStorage.getItem("user"));
 
   useEffect(() => {
     const fetchNotifications = async () => {
       try {
-        const user = JSON.parse(localStorage.getItem("user"));
-
         if (!user?.id) {
           setLoading(false);
           return;
         }
 
-        const res = await getNotifications(user.id);
+        const res = await getNotifications();
         setNotifications(res.data.data || []);
       } catch (err) {
         console.log("ERROR FETCHING NOTIFICATIONS:", err);
@@ -27,10 +27,24 @@ function Notifications() {
     };
 
     fetchNotifications();
-  }, []);
+  }, [user?.id]);
 
   if (loading) {
     return <div className="page-container"><h2>Loading notifications...</h2></div>;
+  }
+
+  if (!user?.id) {
+    return (
+      <section className="notifications-page page-container">
+        <div className="empty-state">
+          <h2>Please login first</h2>
+          <p>Login to view your private notifications.</p>
+          <Link to="/login" className="primary-link">
+            Login
+          </Link>
+        </div>
+      </section>
+    );
   }
 
 return (

@@ -59,7 +59,6 @@ function ProductDetails() {
       }
 
       const response = await addToCart({
-        user_id: user.id,
         product_id: product.id,
         quantity: 1
       });

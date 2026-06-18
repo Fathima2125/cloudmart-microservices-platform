@@ -1,6 +1,21 @@
 const pool = require("../config/db");
+const {
+  getCache,
+  setCache,
+  deleteCache,
+  deleteByPattern
+} = require("../config/redis");
+
+const PRODUCT_CACHE_TTL_SECONDS = 60;
 
 const getCategories = async () => {
+    const cacheKey = "categories:all";
+    const cachedCategories = await getCache(cacheKey);
+
+    if (cachedCategories) {
+        return cachedCategories;
+    }
+
     const result = await pool.query(
 
         `SELECT *
@@ -9,13 +24,27 @@ const getCategories = async () => {
         `
     );
 
-    return {
+    const response = {
         success: true,
         data: result.rows
     };
+
+    await setCache(
+        cacheKey,
+        response,
+        PRODUCT_CACHE_TTL_SECONDS
+    );
+
+    return response;
 };
 
 const getProducts = async (search, category) => {
+  const cacheKey = `products:list:${search || "all"}:${category || "all"}`;
+  const cachedProducts = await getCache(cacheKey);
+
+  if (cachedProducts) {
+    return cachedProducts;
+  }
 
   let query = `
     SELECT
@@ -48,13 +77,27 @@ const getProducts = async (search, category) => {
   const result =
     await pool.query(query, values);
 
-  return {
+  const response = {
     success: true,
     data: result.rows
   };
+
+  await setCache(
+    cacheKey,
+    response,
+    PRODUCT_CACHE_TTL_SECONDS
+  );
+
+  return response;
 };
 
 const getProductById = async (id) => {
+  const cacheKey = `products:item:${id}`;
+  const cachedProduct = await getCache(cacheKey);
+
+  if (cachedProduct) {
+    return cachedProduct;
+  }
 
   const result = await pool.query(
     `
@@ -77,10 +120,26 @@ const getProductById = async (id) => {
     throw new Error("Product not found");
   }
 
-  return {
+  const response = {
     success: true,
     data: result.rows[0]
   };
+
+  await setCache(
+    cacheKey,
+    response,
+    PRODUCT_CACHE_TTL_SECONDS
+  );
+
+  return response;
+};
+
+const clearProductCache = async (productId) => {
+  await deleteByPattern("products:list:*");
+  await deleteCache([
+    "categories:all",
+    `products:item:${productId}`
+  ]);
 };
 
 const createProduct = async ({
@@ -122,6 +181,8 @@ const createProduct = async ({
       category_id
     ]
   );
+
+  await clearProductCache(result.rows[0].id);
 
   return {
     success: true,
@@ -172,6 +233,8 @@ const updateProduct = async (
     ]
   );
 
+  await clearProductCache(id);
+
   return {
     success: true,
     message: "Product updated successfully",
@@ -194,6 +257,8 @@ const deleteProduct = async (id) => {
     "DELETE FROM products WHERE id = $1",
     [id]
   );
+
+  await clearProductCache(id);
 
   return {
     success: true,

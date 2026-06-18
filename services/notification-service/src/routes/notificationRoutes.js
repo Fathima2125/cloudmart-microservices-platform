@@ -34,33 +34,20 @@ const {
   deleteNotification
 } = require("../controllers/notificationController");
 
-// create
-// router.post("/", createNotification);
+const {
+  authenticate,
+  requireInternalService
+} = require("../middleware/authMiddleware");
 
-// // get all OR user-specific (choose one)
-// router.get("/", getNotificationsByUser);
+router.post("/", requireInternalService, createNotification);
 
-// get by user (optional if above not used)
-router.get("/user/:userId", getNotificationsByUser);
+router.get("/me", authenticate, getNotificationsByUser);
 
-// // get single notification
-// router.get("/:id", getNotificationById);
+router.get("/user/:userId", authenticate, getNotificationsByUser);
 
-// router.get("/user/:userId", getNotificationsByUser);
+router.get("/single/:id", authenticate, getNotificationById);
 
-// // delete
-
-// router.delete("/:id", deleteNotification);
-
-router.post("/", createNotification);
-
-// user notifications (IMPORTANT)
-router.get("/user/:userId", getNotificationsByUser);
-
-// single notification (admin/debug only)
-router.get("/single/:id", getNotificationById);
-
-router.delete("/:id", deleteNotification);
+router.delete("/:id", authenticate, deleteNotification);
 
 
 module.exports = router;
