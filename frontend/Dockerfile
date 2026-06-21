@@ -2,13 +2,15 @@ FROM node:20-alpine AS build
 
 WORKDIR /app
 
+ARG ENV_FILE=.env.docker
+
 COPY package*.json ./
 
 RUN npm ci
 
 COPY . .
 
-COPY .env.docker .env
+COPY ${ENV_FILE} .env
 
 RUN npm run build
 

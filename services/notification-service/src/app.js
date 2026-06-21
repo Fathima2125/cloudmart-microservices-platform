@@ -16,6 +16,15 @@ app.use(
   notificationRoutes
 );
 
+
+
+app.get("/health", (req, res) => {
+  res.status(200).json({
+    status: "ok",
+    service: "notification-service"
+  });
+});
+
 const PORT =
 process.env.PORT || 5005;
 

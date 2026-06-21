@@ -11,6 +11,17 @@ app.use(express.json());
 
 app.use("/api/v1/products", productRoutes);
 
+
+
+app.use("/api/v1/products", productRoutes);
+
+app.get("/health", (req, res) => {
+  res.status(200).json({
+    status: "ok",
+    service: "product-service"
+  });
+});
+
 const PORT = process.env.PORT || 5002;
 
 app.listen(PORT, "0.0.0.0",() => {

@@ -11,6 +11,15 @@ app.use(express.json());
 
 app.use("/api/v1/cart", cartRoutes);
 
+
+
+app.get("/health", (req, res) => {
+  res.status(200).json({
+    status: "ok",
+    service: "cart-service"
+  });
+});
+
 const PORT = process.env.PORT || 5004;
 
 app.listen(PORT, "0.0.0.0",() => {

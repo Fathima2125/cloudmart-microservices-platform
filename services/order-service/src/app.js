@@ -11,7 +11,16 @@ app.use(express.json());
 
 app.use("/api/v1/orders", orderRoutes);
 
+
+app.get("/health", (req, res) => {
+  res.status(200).json({
+    status: "ok",
+    service: "order-service"
+  });
+});
+
 const PORT = process.env.PORT || 5003;
+
 
 app.listen(PORT, "0.0.0.0",() => {
   console.log(`Order Service running on port ${PORT}`);
