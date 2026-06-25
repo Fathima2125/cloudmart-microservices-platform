@@ -33,3 +33,15 @@ output "eks_cluster_endpoint" {
 output "eks_node_group_name" {
   value = module.eks.node_group_name
 }
+
+output "rds_endpoint" {
+  value = module.rds.rds_endpoint
+}
+
+output "rds_port" {
+  value = module.rds.rds_port
+}
+
+output "rds_db_name" {
+  value = module.rds.rds_db_name
+}

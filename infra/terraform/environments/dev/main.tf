@@ -36,3 +36,15 @@ module "eks" {
   eks_sg_id          = module.security_groups.eks_sg_id
   node_instance_type = "t3.medium"
 }
+
+module "rds" {
+  source = "../../modules/rds"
+
+  project_name       = var.project_name
+  private_subnet_ids = module.vpc.private_subnet_ids
+  rds_sg_id          = module.security_groups.rds_sg_id
+
+  db_name     = var.db_name
+  db_username = var.db_username
+  db_password = var.db_password
+}

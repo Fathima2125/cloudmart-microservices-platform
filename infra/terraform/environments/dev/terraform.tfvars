@@ -1,2 +1,5 @@
 aws_region   = "us-east-1"
 project_name = "cloudmart"
+db_name     = "cloudmart_db"
+db_username = "postgres"
+db_password = "password123!"
