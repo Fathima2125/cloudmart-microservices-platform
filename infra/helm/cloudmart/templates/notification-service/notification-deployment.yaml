@@ -15,8 +15,8 @@ spec:
     spec:
       containers:
         - name: notification-service
-          image: cloudmart-notification-service:latest
-          imagePullPolicy: Never
+          image: 506098131053.dkr.ecr.us-east-1.amazonaws.com/cloudmart-notification-service:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 5005
           envFrom:

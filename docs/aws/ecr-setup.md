@@ -110,3 +110,17 @@ aws ecr list-images --repository-name cloudmart-notification-service --region $A
 aws ecr list-images --repository-name cloudmart-order-service --region $AWS_REGION
 aws ecr list-images --repository-name cloudmart-frontend --region $AWS_REGION
 ````
+
+## screenshots-
+
+### ECR Repo Created
+
+![alt text](<screenshots/ecr repo created.png>)
+
+### aws sts get caller identity
+
+![](<screenshots/aws sts get-caller-identity.png>)
+
+### aws ecr describe-repositories
+
+![alt text](<screenshots/aws ecr describe-repositories.png>)

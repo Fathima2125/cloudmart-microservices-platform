@@ -16,8 +16,8 @@ spec:
     spec:
       containers:
         - name: product-service
-          image: cloudmart-product-service:latest
-          imagePullPolicy: Never
+          image: 506098131053.dkr.ecr.us-east-1.amazonaws.com/cloudmart-product-service:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 5002
           envFrom:

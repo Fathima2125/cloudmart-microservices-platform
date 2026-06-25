@@ -24,15 +24,17 @@ function Orders() {
   setLoading] =
   useState(true);
 
+  const [refreshing,
+  setRefreshing] =
+  useState(false);
+
   const user =
     JSON.parse(
       localStorage.getItem("user")
     );
 
-  useEffect(() => {
-
-    const fetchOrders =
-    async () => {
+  const fetchOrders =
+    async ({ silent = false } = {}) => {
 
       if (!user?.id) {
         setLoading(false);
@@ -40,6 +42,12 @@ function Orders() {
       }
 
       try {
+
+        if (silent) {
+          setRefreshing(true);
+        } else {
+          setLoading(true);
+        }
 
         const response =
         await getOrders();
@@ -55,12 +63,39 @@ function Orders() {
       } finally {
 
         setLoading(false);
+        setRefreshing(false);
 
       }
 
     };
 
+  useEffect(() => {
+
     fetchOrders();
+
+    const handleFocus = () => {
+      fetchOrders({ silent: true });
+    };
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "visible") {
+        fetchOrders({ silent: true });
+      }
+    };
+
+    window.addEventListener("focus", handleFocus);
+    document.addEventListener(
+      "visibilitychange",
+      handleVisibilityChange
+    );
+
+    return () => {
+      window.removeEventListener("focus", handleFocus);
+      document.removeEventListener(
+        "visibilitychange",
+        handleVisibilityChange
+      );
+    };
 
   }, [user?.id]);
 
@@ -100,6 +135,14 @@ function Orders() {
           My Orders
         </h1>
         <p>Track CloudMart orders created through the checkout flow.</p>
+        <button
+          type="button"
+          className="refresh-orders-button"
+          onClick={() => fetchOrders({ silent: true })}
+          disabled={refreshing}
+        >
+          {refreshing ? "Refreshing..." : "Refresh orders"}
+        </button>
       </div>
 
       {

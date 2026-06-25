@@ -5,7 +5,8 @@ metadata:
   namespace: {{ .Release.Namespace }}
 data:
   PORT: "5004"
-  DB_HOST: postgres-service
+  DB_HOST: cloudmart-postgres.ccnwaycacsuq.us-east-1.rds.amazonaws.com
   DB_PORT: "5432"
   DB_NAME: cloudmart_db
-  REDIS_URL: redis://redis-service:6379
+  DB_SSL: "true"
+  REDIS_URL: redis://cloudmart-redis.ycv67f.0001.use1.cache.amazonaws.com:6379

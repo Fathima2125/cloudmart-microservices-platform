@@ -5,6 +5,7 @@ metadata:
   namespace: {{ .Release.Namespace }}
 data:
   PORT: "5005"
-  DB_HOST: postgres-service
+  DB_HOST: cloudmart-postgres.ccnwaycacsuq.us-east-1.rds.amazonaws.com
   DB_PORT: "5432"
   DB_NAME: cloudmart_db
+  DB_SSL: "true"

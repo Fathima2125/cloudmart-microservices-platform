@@ -48,6 +48,23 @@
   color: var(--success);
 }
 
+.refresh-orders-button {
+  align-self: flex-start;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--surface);
+  color: var(--primary-dark);
+  cursor: pointer;
+  font-weight: 800;
+  margin-top: 12px;
+  padding: 10px 14px;
+}
+
+.refresh-orders-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
 @media (max-width: 620px) {
   .order-card {
     align-items: flex-start;
