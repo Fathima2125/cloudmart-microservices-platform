@@ -48,3 +48,11 @@ module "rds" {
   db_username = var.db_username
   db_password = var.db_password
 }
+
+module "elasticache" {
+  source = "../../modules/elasticache"
+
+  project_name       = var.project_name
+  private_subnet_ids = module.vpc.private_subnet_ids
+  redis_sg_id        = module.security_groups.redis_sg_id
+}

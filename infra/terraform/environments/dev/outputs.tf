@@ -45,3 +45,11 @@ output "rds_port" {
 output "rds_db_name" {
   value = module.rds.rds_db_name
 }
+
+output "redis_endpoint" {
+  value = module.elasticache.redis_endpoint
+}
+
+output "redis_port" {
+  value = module.elasticache.redis_port
+}
