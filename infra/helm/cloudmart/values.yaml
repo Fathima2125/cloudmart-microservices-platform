@@ -11,6 +11,9 @@ postgres:
 redis:
   enabled: false
 
+localIngress:
+  enabled: false
+
 images:
   authService:
     repository: 506098131053.dkr.ecr.us-east-1.amazonaws.com/cloudmart-auth-service
