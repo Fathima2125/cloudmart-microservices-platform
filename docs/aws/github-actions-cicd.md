@@ -167,18 +167,29 @@ curl http://<ALB-DNS-NAME>/api/v1/products
 
 ## Screenshots To Capture
 
-Useful screenshots for README/project documentation:
+### GitHub Actions workflow success page
+![alt text](<screenshots/GitHub Actions workflow success page.png>)
 
-```text
-GitHub Actions workflow success page
-Build and push Docker images step
-Deploy CloudMart to EKS step
-Verify rollouts step
-Amazon ECR repositories showing new image tags
-kubectl get pods -n cloudmart
-helm status cloudmart -n cloudmart
-CloudMart website running through ALB
-```
+### Build and push Docker images step
+![alt text](<screenshots/Build and push Docker images step.png>)
+
+### Deploy CloudMart to EKS step
+![alt text](<screenshots/Deploy CloudMart to EKS step.png>)
+
+### Verify rollouts step
+![alt text](<screenshots/Verify rollouts step.png>)
+
+### Amazon ECR repositories showing new image tags
+![alt text](<screenshots/Amazon ECR repositories showing new image tags.png>)
+
+### kubectl get pods -n cloudmart
+![alt text](<screenshots/kubectl get pods -n cloudmart.png>)
+
+### helm status cloudmart -n cloudmart
+![alt text](<screenshots/helm status cloudmart -n cloudmart.png>)
+
+### CloudMart website running through ALB
+![alt text](<screenshots/CloudMart website running through ALB.png>)
 
 ## Important Note
 
