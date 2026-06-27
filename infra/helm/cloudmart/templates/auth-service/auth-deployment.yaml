@@ -15,8 +15,8 @@ spec:
     spec:
       containers:
         - name: auth-service
-          image: 506098131053.dkr.ecr.us-east-1.amazonaws.com/cloudmart-auth-service:latest
-          imagePullPolicy: Always
+          image: "{{ .Values.images.authService.repository }}:{{ .Values.images.authService.tag }}"
+          imagePullPolicy: {{ .Values.images.authService.pullPolicy }}
           ports:
             - containerPort: 5001
           envFrom:

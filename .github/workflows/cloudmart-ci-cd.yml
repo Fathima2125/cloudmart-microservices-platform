@@ -1,0 +1,108 @@
+name: CloudMart CI/CD
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  workflow_dispatch:
+
+env:
+  AWS_REGION: us-east-1
+  AWS_ACCOUNT_ID: "506098131053"
+  EKS_CLUSTER_NAME: cloudmart-eks-cluster
+  KUBE_NAMESPACE: cloudmart
+  HELM_RELEASE: cloudmart
+  HELM_CHART_PATH: ./infra/helm/cloudmart
+
+jobs:
+  build-push-deploy:
+    name: Build, Push, and Deploy
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Set image tag
+        run: echo "IMAGE_TAG=sha-${GITHUB_SHA::7}" >> "$GITHUB_ENV"
+
+      - name: Build and push Docker images
+        env:
+          ECR_REGISTRY: ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com
+        run: |
+          set -euo pipefail
+
+          services=(
+            "auth-service services/auth-service cloudmart-auth-service"
+            "product-service services/product-service cloudmart-product-service"
+            "cart-service services/cart-service cloudmart-cart-service"
+            "order-service services/order-service cloudmart-order-service"
+            "notification-service services/notification-service cloudmart-notification-service"
+            "frontend frontend cloudmart-frontend"
+          )
+
+          for service in "${services[@]}"; do
+            read -r name context repository <<< "$service"
+
+            echo "Building $name"
+            docker build \
+              -t "$ECR_REGISTRY/$repository:$IMAGE_TAG" \
+              -t "$ECR_REGISTRY/$repository:latest" \
+              "$context"
+
+            echo "Pushing $name"
+            docker push "$ECR_REGISTRY/$repository:$IMAGE_TAG"
+            docker push "$ECR_REGISTRY/$repository:latest"
+          done
+
+      - name: Set up kubectl
+        uses: azure/setup-kubectl@v4
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v4
+
+      - name: Update kubeconfig
+        run: |
+          aws eks update-kubeconfig \
+            --region "$AWS_REGION" \
+            --name "$EKS_CLUSTER_NAME"
+
+      - name: Helm lint
+        run: helm lint "$HELM_CHART_PATH"
+
+      - name: Deploy CloudMart to EKS
+        run: |
+          helm upgrade --install "$HELM_RELEASE" "$HELM_CHART_PATH" \
+            --namespace "$KUBE_NAMESPACE" \
+            --create-namespace \
+            --set images.authService.tag="$IMAGE_TAG" \
+            --set images.productService.tag="$IMAGE_TAG" \
+            --set images.cartService.tag="$IMAGE_TAG" \
+            --set images.orderService.tag="$IMAGE_TAG" \
+            --set images.notificationService.tag="$IMAGE_TAG" \
+            --set images.frontend.tag="$IMAGE_TAG" \
+            --wait \
+            --timeout 10m
+
+      - name: Verify rollouts
+        run: |
+          kubectl rollout status deployment/auth-service -n "$KUBE_NAMESPACE" --timeout=180s
+          kubectl rollout status deployment/product-service -n "$KUBE_NAMESPACE" --timeout=180s
+          kubectl rollout status deployment/cart-service -n "$KUBE_NAMESPACE" --timeout=180s
+          kubectl rollout status deployment/order-service -n "$KUBE_NAMESPACE" --timeout=180s
+          kubectl rollout status deployment/notification-service -n "$KUBE_NAMESPACE" --timeout=180s
+          kubectl rollout status deployment/frontend -n "$KUBE_NAMESPACE" --timeout=180s
+          kubectl get pods -n "$KUBE_NAMESPACE"

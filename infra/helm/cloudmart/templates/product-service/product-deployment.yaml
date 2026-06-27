@@ -16,8 +16,8 @@ spec:
     spec:
       containers:
         - name: product-service
-          image: 506098131053.dkr.ecr.us-east-1.amazonaws.com/cloudmart-product-service:latest
-          imagePullPolicy: Always
+          image: "{{ .Values.images.productService.repository }}:{{ .Values.images.productService.tag }}"
+          imagePullPolicy: {{ .Values.images.productService.pullPolicy }}
           ports:
             - containerPort: 5002
           envFrom:

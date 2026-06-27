@@ -15,8 +15,8 @@ spec:
     spec:
       containers:
         - name: cart-service
-          image:  506098131053.dkr.ecr.us-east-1.amazonaws.com/cloudmart-cart-service:latest
-          imagePullPolicy: Always
+          image: "{{ .Values.images.cartService.repository }}:{{ .Values.images.cartService.tag }}"
+          imagePullPolicy: {{ .Values.images.cartService.pullPolicy }}
           ports:
             - containerPort: 5004
           envFrom:
