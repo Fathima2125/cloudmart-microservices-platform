@@ -58,10 +58,18 @@ jobs:
             read -r name context repository <<< "$service"
 
             echo "Building $name"
-            docker build \
-              -t "$ECR_REGISTRY/$repository:$IMAGE_TAG" \
-              -t "$ECR_REGISTRY/$repository:latest" \
-              "$context"
+            if [ "$name" = "frontend" ]; then
+              docker build \
+                --build-arg ENV_FILE=.env.kubernetes \
+                -t "$ECR_REGISTRY/$repository:$IMAGE_TAG" \
+                -t "$ECR_REGISTRY/$repository:latest" \
+                "$context"
+            else
+              docker build \
+                -t "$ECR_REGISTRY/$repository:$IMAGE_TAG" \
+                -t "$ECR_REGISTRY/$repository:latest" \
+                "$context"
+            fi
 
             echo "Pushing $name"
             docker push "$ECR_REGISTRY/$repository:$IMAGE_TAG"
