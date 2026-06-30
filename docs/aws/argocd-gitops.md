@@ -103,12 +103,24 @@ deployments/services appear in the resource tree
 
 ## Screenshots To Capture
 
-```text
-Argo CD login page
-CloudMart Application in Argo CD
-CloudMart Synced status
-CloudMart Healthy status
-Resource tree showing Deployments and Services
-GitHub Actions image tag commit
-values.yaml updated with sha-* image tags
-```
+
+### Argo CD login page
+docs/aws/screenshots/Argo CD login page.png
+
+### CloudMart Application in Argo CD
+![alt text](<screenshots/CloudMart Application in Argo CD.png>)
+
+### CloudMart Synced status
+![alt text](<screenshots/CloudMart Synced status.png>)
+
+### CloudMart Healthy status
+![alt text](<screenshots/CloudMart Healthy status.png>)
+
+### Resource tree showing Deployments and Services
+![alt text](<screenshots/Resource tree showing Deployments and Services.png>)
+
+### GitHub Actions image tag commit
+![alt text](<screenshots/GitHub Actions image tag commit.png>)
+
+### values.yaml updated with sha-* image tags
+![alt text](<screenshots/values.yaml updated with sha-* image tags.png>)
