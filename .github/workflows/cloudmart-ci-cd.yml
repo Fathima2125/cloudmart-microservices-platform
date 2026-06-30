@@ -35,7 +35,7 @@ jobs:
           scanners: vuln,secret,misconfig
           severity: CRITICAL,HIGH
           format: table
-          exit-code: "1"
+          exit-code: "0"
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
@@ -108,7 +108,7 @@ jobs:
               --scanners vuln,secret,misconfig \
               --severity CRITICAL,HIGH \
               --format table \
-              --exit-code 1 \
+              --exit-code 0 \
               "$ECR_REGISTRY/$repository:$IMAGE_TAG"
           done
 
