@@ -22,3 +22,9 @@ variable "db_password" {
   type        = string
   sensitive   = true
 }
+
+variable "github_actions_role_arn" {
+  description = "IAM role ARN used by GitHub Actions OIDC to deploy CloudMart"
+  type        = string
+  default     = ""
+}

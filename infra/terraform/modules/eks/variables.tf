@@ -18,3 +18,9 @@ variable "node_instance_type" {
   type        = string
   default     = "t3.medium"
 }
+
+variable "github_actions_role_arn" {
+  description = "IAM role ARN used by GitHub Actions OIDC to deploy to EKS"
+  type        = string
+  default     = ""
+}
