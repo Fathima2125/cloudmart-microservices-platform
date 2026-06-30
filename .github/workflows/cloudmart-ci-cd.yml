@@ -27,6 +27,16 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Run Trivy filesystem scan
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: fs
+          scan-ref: .
+          scanners: vuln,secret,misconfig
+          severity: CRITICAL,HIGH
+          format: table
+          exit-code: "0"
+
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -39,7 +49,7 @@ jobs:
       - name: Set image tag
         run: echo "IMAGE_TAG=sha-${GITHUB_SHA::7}" >> "$GITHUB_ENV"
 
-      - name: Build and push Docker images
+      - name: Build Docker images
         env:
           ECR_REGISTRY: ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com
         run: |
@@ -70,6 +80,55 @@ jobs:
                 -t "$ECR_REGISTRY/$repository:latest" \
                 "$context"
             fi
+          done
+
+      - name: Run Trivy image scans
+        env:
+          ECR_REGISTRY: ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com
+        run: |
+          set -euo pipefail
+
+          services=(
+            "auth-service cloudmart-auth-service"
+            "product-service cloudmart-product-service"
+            "cart-service cloudmart-cart-service"
+            "order-service cloudmart-order-service"
+            "notification-service cloudmart-notification-service"
+            "frontend cloudmart-frontend"
+          )
+
+          for service in "${services[@]}"; do
+            read -r name repository <<< "$service"
+
+            echo "Scanning $name image"
+            docker run --rm \
+              -v /var/run/docker.sock:/var/run/docker.sock \
+              -v "$HOME/.cache/trivy:/root/.cache/" \
+              aquasec/trivy:latest image \
+              --scanners vuln,secret,misconfig \
+              --severity CRITICAL,HIGH \
+              --format table \
+              --exit-code 0 \
+              "$ECR_REGISTRY/$repository:$IMAGE_TAG"
+          done
+
+      - name: Push Docker images to Amazon ECR
+        env:
+          ECR_REGISTRY: ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com
+        run: |
+          set -euo pipefail
+
+          services=(
+            "auth-service cloudmart-auth-service"
+            "product-service cloudmart-product-service"
+            "cart-service cloudmart-cart-service"
+            "order-service cloudmart-order-service"
+            "notification-service cloudmart-notification-service"
+            "frontend cloudmart-frontend"
+          )
+
+          for service in "${services[@]}"; do
+            read -r name repository <<< "$service"
 
             echo "Pushing $name"
             docker push "$ECR_REGISTRY/$repository:$IMAGE_TAG"

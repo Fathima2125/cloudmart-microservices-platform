@@ -5,7 +5,9 @@ This phase automates the CloudMart deployment flow:
 ```text
 Git push
   -> GitHub Actions
+  -> Trivy source code scan
   -> Build Docker images
+  -> Trivy Docker image scans
   -> Push images to Amazon ECR
   -> Deploy updated Helm release to Amazon EKS
   -> Verify Kubernetes rollouts
@@ -97,6 +99,45 @@ cloudmart-frontend:sha-a1b2c3d
 
 The Helm deployment uses the commit-based tag. This makes the running version traceable to a specific Git commit.
 
+## Trivy Security Scanning
+
+The workflow runs Trivy before pushing images to ECR:
+
+```text
+Run Trivy filesystem scan
+Build Docker images
+Run Trivy image scans
+Push images to ECR
+Deploy to EKS
+```
+
+The filesystem scan checks the repository for:
+
+```text
+vulnerabilities
+secrets
+misconfigurations
+```
+
+The image scan checks each built Docker image:
+
+```text
+cloudmart-auth-service
+cloudmart-product-service
+cloudmart-cart-service
+cloudmart-order-service
+cloudmart-notification-service
+cloudmart-frontend
+```
+
+Current learning-mode setting:
+
+```text
+exit-code: 0
+```
+
+This means Trivy reports HIGH and CRITICAL findings but does not fail the pipeline yet. Later, this can be changed to `exit-code: 1` so the pipeline stops when HIGH or CRITICAL issues are found.
+
 ## Helm Image Configuration
 
 The Helm chart now reads image repositories and tags from:
@@ -169,6 +210,12 @@ curl http://<ALB-DNS-NAME>/api/v1/products
 
 ### GitHub Actions workflow success page
 ![alt text](<screenshots/GitHub Actions workflow success page.png>)
+
+### Run Trivy filesystem scan step
+Add screenshot after the first successful Trivy run.
+
+### Run Trivy image scans step
+Add screenshot after the first successful Trivy run.
 
 ### Build and push Docker images step
 ![alt text](<screenshots/Build and push Docker images step.png>)
