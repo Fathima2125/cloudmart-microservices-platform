@@ -212,10 +212,10 @@ curl http://<ALB-DNS-NAME>/api/v1/products
 ![alt text](<screenshots/GitHub Actions workflow success page.png>)
 
 ### Run Trivy filesystem scan step
-Add screenshot after the first successful Trivy run.
+![alt text](<screenshots/Run Trivy filesystem scan.png>)
 
 ### Run Trivy image scans step
-Add screenshot after the first successful Trivy run.
+![alt text](<screenshots/Run Trivy image scans.png>)
 
 ### Build and push Docker images step
 ![alt text](<screenshots/Build and push Docker images step.png>)
