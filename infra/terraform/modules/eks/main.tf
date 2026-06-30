@@ -76,6 +76,33 @@ resource "aws_iam_role_policy_attachment" "ecr_readonly_policy" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
 }
 
+resource "aws_iam_role_policy" "cloudmart_messaging_policy" {
+  name = "${var.project_name}-messaging-policy"
+  role = aws_iam_role.eks_node_role.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "sns:Publish"
+        ]
+        Resource = var.order_events_topic_arn
+      },
+      {
+        Effect = "Allow"
+        Action = [
+          "sqs:ReceiveMessage",
+          "sqs:DeleteMessage",
+          "sqs:GetQueueAttributes"
+        ]
+        Resource = var.notification_events_queue_arn
+      }
+    ]
+  })
+}
+
 resource "aws_eks_node_group" "main" {
   cluster_name    = aws_eks_cluster.main.name
   node_group_name = "${var.project_name}-node-group"
@@ -92,7 +119,8 @@ resource "aws_eks_node_group" "main" {
   depends_on = [
     aws_iam_role_policy_attachment.worker_node_policy,
     aws_iam_role_policy_attachment.cni_policy,
-    aws_iam_role_policy_attachment.ecr_readonly_policy
+    aws_iam_role_policy_attachment.ecr_readonly_policy,
+    aws_iam_role_policy.cloudmart_messaging_policy
   ]
 
   tags = {

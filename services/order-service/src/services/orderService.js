@@ -1,7 +1,10 @@
 const pool =
 require("../config/db");
 
-const axios = require("axios");
+const {
+  publishNotificationEvent
+} = require("./notificationPublisher");
+
 const createOrder =
 async (userId, { items }) => {
 
@@ -108,26 +111,14 @@ async (userId, { items }) => {
 
   }
 
-//   await createNotification(
-//   user_id,
-
-//   `Your order #${order.id} has been placed successfully`
-// );
-
-await axios.post(
-  "http://notification-service:5005/api/notifications",
-  {
+await publishNotificationEvent({
+    eventType: "ORDER_PLACED",
     user_id: userId,
     type: "ORDER",
     message: `Your order #${order.id} has been placed successfully`,
     order_id: order.id
-  },
-  {
-    headers: {
-      "x-internal-service-token": process.env.INTERNAL_SERVICE_TOKEN
-    }
-  }
-);
+});
+
   return {
     success: true,
     message:
@@ -239,41 +230,27 @@ async (
 
   if (status === "SHIPPED") {
 
-    await axios.post(
-      "http://notification-service:5005/api/notifications",
-      {
+    await publishNotificationEvent({
+        eventType: "ORDER_SHIPPED",
         user_id: order.user_id,
         type: "ORDER",
         message:
           `Your order #${order.id} has been shipped successfully`,
         order_id: order.id
-      },
-      {
-        headers: {
-          "x-internal-service-token": process.env.INTERNAL_SERVICE_TOKEN
-        }
-      }
-    );
+    });
 
   }
 
   if (status === "DELIVERED") {
 
-    await axios.post(
-      "http://notification-service:5005/api/notifications",
-      {
+    await publishNotificationEvent({
+        eventType: "ORDER_DELIVERED",
         user_id: order.user_id,
         type: "ORDER",
         message:
           `Your order #${order.id} has been delivered successfully`,
         order_id: order.id
-      },
-      {
-        headers: {
-          "x-internal-service-token": process.env.INTERNAL_SERVICE_TOKEN
-        }
-      }
-    );
+    });
 
   }
 

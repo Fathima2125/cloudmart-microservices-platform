@@ -24,3 +24,15 @@ variable "github_actions_role_arn" {
   type        = string
   default     = ""
 }
+
+variable "order_events_topic_arn" {
+  description = "SNS topic ARN used by CloudMart order events"
+  type        = string
+  default     = ""
+}
+
+variable "notification_events_queue_arn" {
+  description = "SQS queue ARN used by CloudMart notification events"
+  type        = string
+  default     = ""
+}

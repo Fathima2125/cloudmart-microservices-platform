@@ -9,3 +9,5 @@ data:
   DB_PORT: "5432"
   DB_NAME: cloudmart_db
   DB_SSL: "true"
+  AWS_REGION: {{ .Values.messaging.awsRegion | quote }}
+  ORDER_EVENTS_TOPIC_ARN: {{ .Values.messaging.orderEventsTopicArn | quote }}

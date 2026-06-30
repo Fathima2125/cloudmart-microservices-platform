@@ -53,3 +53,11 @@ output "redis_endpoint" {
 output "redis_port" {
   value = module.elasticache.redis_port
 }
+
+output "order_events_topic_arn" {
+  value = module.messaging.order_events_topic_arn
+}
+
+output "notification_events_queue_url" {
+  value = module.messaging.notification_events_queue_url
+}

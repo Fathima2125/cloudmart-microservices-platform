@@ -5,6 +5,9 @@ require("dotenv").config();
 
 const notificationRoutes =
 require("./routes/notificationRoutes");
+const {
+  startSqsConsumer
+} = require("./services/sqsConsumer");
 
 const app = express();
 
@@ -32,4 +35,5 @@ app.listen(PORT,"0.0.0.0", () => {
   console.log(
     `Notification Service running on port ${PORT}`
   );
+  startSqsConsumer();
 });
