@@ -13,6 +13,7 @@ spec:
       labels:
         app: order-service
     spec:
+      serviceAccountName: order-service-sa
       containers:
         - name: order-service
           image: "{{ .Values.images.orderService.repository }}:{{ .Values.images.orderService.tag }}"

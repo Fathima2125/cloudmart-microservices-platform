@@ -13,6 +13,7 @@ spec:
       labels:
         app: notification-service
     spec:
+      serviceAccountName: notification-service-sa
       containers:
         - name: notification-service
           image: "{{ .Values.images.notificationService.repository }}:{{ .Values.images.notificationService.tag }}"

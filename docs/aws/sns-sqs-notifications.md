@@ -32,7 +32,49 @@ SNS topic: cloudmart-order-events
 SQS queue: cloudmart-notification-events
 SNS subscription: topic -> queue
 SQS queue policy allowing SNS to send messages
-EKS node IAM permissions for SNS publish and SQS consume
+```
+
+EKS uses IAM Roles for Service Accounts for pod AWS credentials:
+
+```text
+order-service-sa -> SNS publish permissions
+notification-service-sa -> SQS consume permissions
+```
+
+The Helm deployments reference those service accounts, so AWS SDK credentials are available inside the pods.
+
+Create the IAM policies once:
+
+```bash
+aws iam create-policy \
+  --policy-name CloudMartOrderEventsPublisherPolicy \
+  --policy-document '{"Version":"2012-10-17","Statement":[{"Effect":"Allow","Action":["sns:Publish"],"Resource":"arn:aws:sns:us-east-1:506098131053:cloudmart-order-events"}]}'
+
+aws iam create-policy \
+  --policy-name CloudMartNotificationEventsConsumerPolicy \
+  --policy-document '{"Version":"2012-10-17","Statement":[{"Effect":"Allow","Action":["sqs:ReceiveMessage","sqs:DeleteMessage","sqs:GetQueueAttributes"],"Resource":"arn:aws:sqs:us-east-1:506098131053:cloudmart-notification-events"}]}'
+```
+
+After a full EKS destroy/apply, recreate the IRSA service accounts:
+
+```bash
+eksctl create iamserviceaccount \
+  --cluster cloudmart-eks-cluster \
+  --namespace cloudmart \
+  --name order-service-sa \
+  --attach-policy-arn arn:aws:iam::506098131053:policy/CloudMartOrderEventsPublisherPolicy \
+  --override-existing-serviceaccounts \
+  --region us-east-1 \
+  --approve
+
+eksctl create iamserviceaccount \
+  --cluster cloudmart-eks-cluster \
+  --namespace cloudmart \
+  --name notification-service-sa \
+  --attach-policy-arn arn:aws:iam::506098131053:policy/CloudMartNotificationEventsConsumerPolicy \
+  --override-existing-serviceaccounts \
+  --region us-east-1 \
+  --approve
 ```
 
 Terraform module:
@@ -98,6 +140,13 @@ Check AWS resources:
 ```bash
 aws sns list-topics --region us-east-1
 aws sqs list-queues --region us-east-1
+```
+
+Check service accounts:
+
+```bash
+kubectl get serviceaccount order-service-sa -n cloudmart -o yaml
+kubectl get serviceaccount notification-service-sa -n cloudmart -o yaml
 ```
 
 Check notification-service logs:
