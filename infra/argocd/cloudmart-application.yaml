@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cloudmart
+  namespace: argocd
+spec:
+  project: default
+
+  source:
+    repoURL: https://github.com/Fathima2125/ecommerce-platform.git
+    targetRevision: develop
+    path: infra/helm/cloudmart
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: cloudmart
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
