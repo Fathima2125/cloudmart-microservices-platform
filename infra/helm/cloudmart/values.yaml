@@ -27,6 +27,10 @@ monitoring:
     scrapeTimeout: 10s
     labels:
       release: monitoring
+  prometheusRules:
+    enabled: true
+    labels:
+      release: monitoring
 
 images:
   authService:

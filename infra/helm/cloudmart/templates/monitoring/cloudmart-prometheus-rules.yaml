@@ -1,0 +1,84 @@
+{{- if .Values.monitoring.prometheusRules.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: cloudmart-alert-rules
+  namespace: {{ .Release.Namespace }}
+  labels:
+{{- range $key, $value := .Values.monitoring.prometheusRules.labels }}
+    {{ $key }}: {{ $value | quote }}
+{{- end }}
+spec:
+  groups:
+    - name: cloudmart.service-health
+      rules:
+        - alert: CloudMartServiceDown
+          expr: up{namespace="{{ .Release.Namespace }}", job=~"auth-service|product-service|cart-service|order-service|notification-service"} == 0
+          for: 2m
+          labels:
+            severity: critical
+          annotations:
+            summary: "CloudMart service is down"
+            description: "{{`{{ $labels.job }}`}} has not been scrapeable by Prometheus for more than 2 minutes."
+
+        - alert: CloudMartHigh5xxErrorRate
+          expr: |
+            (
+              sum by (service) (rate(cloudmart_http_requests_total{namespace="{{ .Release.Namespace }}", status_code=~"5.."}[5m]))
+              /
+              clamp_min(sum by (service) (rate(cloudmart_http_requests_total{namespace="{{ .Release.Namespace }}"}[5m])), 0.001)
+            ) > 0.05
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "CloudMart service has high 5xx error rate"
+            description: "{{`{{ $labels.service }}`}} has more than 5% 5xx responses for 5 minutes."
+
+        - alert: CloudMartHighLatencyP95
+          expr: |
+            histogram_quantile(
+              0.95,
+              sum by (le, service) (
+                rate(cloudmart_http_request_duration_seconds_bucket{namespace="{{ .Release.Namespace }}"}[5m])
+              )
+            ) > 1
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "CloudMart service p95 latency is high"
+            description: "{{`{{ $labels.service }}`}} p95 latency is above 1 second for 5 minutes."
+
+    - name: cloudmart.kubernetes-health
+      rules:
+        - alert: CloudMartPodRestarting
+          expr: increase(kube_pod_container_status_restarts_total{namespace="{{ .Release.Namespace }}"}[15m]) > 0
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "CloudMart pod restarted"
+            description: "{{`{{ $labels.pod }}`}} restarted during the last 15 minutes."
+
+        - alert: CloudMartPodNotReady
+          expr: kube_pod_status_ready{namespace="{{ .Release.Namespace }}", condition="true"} == 0
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "CloudMart pod is not ready"
+            description: "{{`{{ $labels.pod }}`}} has not been ready for more than 5 minutes."
+
+        - alert: CloudMartHighMemoryUsage
+          expr: |
+            sum by (pod) (
+              container_memory_working_set_bytes{namespace="{{ .Release.Namespace }}", container!="", image!=""}
+            ) > 250 * 1024 * 1024
+          for: 10m
+          labels:
+            severity: warning
+          annotations:
+            summary: "CloudMart pod memory usage is high"
+            description: "{{`{{ $labels.pod }}`}} is using more than 250 MiB memory for 10 minutes."
+{{- end }}
