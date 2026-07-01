@@ -20,6 +20,14 @@ messaging:
   notificationEventsQueueUrl: https://sqs.us-east-1.amazonaws.com/506098131053/cloudmart-notification-events
   sqsPollIntervalMs: "5000"
 
+monitoring:
+  serviceMonitor:
+    enabled: true
+    interval: 30s
+    scrapeTimeout: 10s
+    labels:
+      release: monitoring
+
 images:
   authService:
     repository: 506098131053.dkr.ecr.us-east-1.amazonaws.com/cloudmart-auth-service

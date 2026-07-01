@@ -7,5 +7,6 @@ spec:
   selector:
     app: cart-service
   ports:
-    - port: 5004
+    - name: http
+      port: 5004
       targetPort: 5004

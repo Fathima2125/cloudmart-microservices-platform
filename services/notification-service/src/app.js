@@ -8,18 +8,23 @@ require("./routes/notificationRoutes");
 const {
   startSqsConsumer
 } = require("./services/sqsConsumer");
+const {
+  metricsMiddleware,
+  metricsHandler
+} = require("./middleware/metricsMiddleware");
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
+app.use(metricsMiddleware);
 
 app.use(
   "/api/notifications",
   notificationRoutes
 );
 
-
+app.get("/metrics", metricsHandler);
 
 app.get("/health", (req, res) => {
   res.status(200).json({
