@@ -3,6 +3,8 @@ kind: Service
 metadata:
   name: product-service
   namespace: {{ .Release.Namespace }}
+  labels:
+    app: product-service
 spec:
   selector:
     app: product-service

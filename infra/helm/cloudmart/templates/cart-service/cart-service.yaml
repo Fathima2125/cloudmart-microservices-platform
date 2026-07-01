@@ -3,6 +3,8 @@ kind: Service
 metadata:
   name: cart-service
   namespace: {{ .Release.Namespace }}
+  labels:
+    app: cart-service
 spec:
   selector:
     app: cart-service

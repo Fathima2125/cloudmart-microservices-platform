@@ -202,12 +202,29 @@ For CloudMart, a custom dashboard is better than generic imported dashboards bec
 
 ## Screenshots To Capture
 
-```text
-Prometheus targets showing CloudMart services UP
-ServiceMonitor list in cloudmart namespace
-Grafana CloudMart Observability dashboard
-Request rate panel
-Latency panel
-Pod CPU and memory panels
-Node.js heap/event loop panels
-```
+#### Prometheus targets showing CloudMart services UP
+![alt text](<../aws/screenshots/Prometheus targets showing CloudMart services UP.png>)
+
+#### ServiceMonitor list in cloudmart namespace
+![alt text](<../aws/screenshots/ServiceMonitor list in cloudmart .png>)
+
+#### Grafana CloudMart Observability dashboard
+![alt text](<../aws/screenshots/Grafana CloudMart Observability dashboard.png>)
+
+#### Request rate panel
+![alt text](<../aws/screenshots/Request rate panel.png>)
+
+#### Latency panel
+![alt text](<../aws/screenshots/Latency panel.png>)
+
+#### Pod CPU and memory panels
+![alt text](<../aws/screenshots/Pod CPU Usage.png>)
+
+![alt text](<../aws/screenshots/Pod memory Usage.png>)
+
+#### Node.js heap/event loop panels
+![alt text](<../aws/screenshots/Node.js heap used panel.png>)
+
+![alt text](<../aws/screenshots/Node.js-event loop panel.png>)
+
+
