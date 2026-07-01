@@ -54,27 +54,27 @@ monitoring:
 images:
   authService:
     repository: 506098131053.dkr.ecr.us-east-1.amazonaws.com/cloudmart-auth-service
-    tag: "sha-f3ac099"
+    tag: "sha-96bb2be"
     pullPolicy: Always
   productService:
     repository: 506098131053.dkr.ecr.us-east-1.amazonaws.com/cloudmart-product-service
-    tag: "sha-f3ac099"
+    tag: "sha-96bb2be"
     pullPolicy: Always
   cartService:
     repository: 506098131053.dkr.ecr.us-east-1.amazonaws.com/cloudmart-cart-service
-    tag: "sha-f3ac099"
+    tag: "sha-96bb2be"
     pullPolicy: Always
   orderService:
     repository: 506098131053.dkr.ecr.us-east-1.amazonaws.com/cloudmart-order-service
-    tag: "sha-f3ac099"
+    tag: "sha-96bb2be"
     pullPolicy: Always
   notificationService:
     repository: 506098131053.dkr.ecr.us-east-1.amazonaws.com/cloudmart-notification-service
-    tag: "sha-f3ac099"
+    tag: "sha-96bb2be"
     pullPolicy: Always
   frontend:
     repository: 506098131053.dkr.ecr.us-east-1.amazonaws.com/cloudmart-frontend
-    tag: "sha-f3ac099"
+    tag: "sha-96bb2be"
     pullPolicy: Always
 
 # This sets the container image more information can be found here: https://kubernetes.io/docs/concepts/containers/images/
