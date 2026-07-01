@@ -175,12 +175,26 @@ The notification should appear after the order event is processed from SQS.
 
 ## Screenshots To Capture
 
-```text
-SNS topic cloudmart-order-events
-SQS queue cloudmart-notification-events
-SNS subscription to SQS
-GitHub Actions successful run
-Argo CD synced after image tag update
-notification-service logs showing SQS consumer
-CloudMart notification visible in website
-```
+
+#### SNS topic cloudmart-order-events
+![alt text](<screenshots/SNS topic cloudmart-order-events.png>)
+
+
+#### SQS queue cloudmart-notification-events
+![alt text](<screenshots/SQS queue cloudmart-notification-events.png>)
+
+#### SNS subscription to SQS
+![alt text](<screenshots/SNS subscription to SQS.png>)
+
+
+#### GitHub Actions successful run
+![alt text](<screenshots/GitHub Actions successful run.png>)
+
+#### Argo CD synced after image tag update
+![alt text](<screenshots/Argo CD synced after image tag update.png>)
+
+#### notification-service logs showing SQS consumer
+![alt text](<screenshots/notification-service logs showing SQS consumer.png>)
+
+#### CloudMart notification visible in website
+![alt text](<screenshots/CloudMart notification visible in website.png>)
