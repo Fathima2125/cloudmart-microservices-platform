@@ -61,3 +61,11 @@ output "order_events_topic_arn" {
 output "notification_events_queue_url" {
   value = module.messaging.notification_events_queue_url
 }
+
+output "monitoring_alerts_topic_arn" {
+  value = module.messaging.monitoring_alerts_topic_arn
+}
+
+output "monitoring_alerts_publish_policy_arn" {
+  value = module.messaging.monitoring_alerts_publish_policy_arn
+}

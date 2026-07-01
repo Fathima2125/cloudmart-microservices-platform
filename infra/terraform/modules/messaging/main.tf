@@ -57,3 +57,35 @@ resource "aws_sns_topic_subscription" "notification_events" {
     aws_sqs_queue_policy.notification_events
   ]
 }
+
+resource "aws_sns_topic" "monitoring_alerts" {
+  name = "${var.project_name}-monitoring-alerts"
+
+  tags = {
+    Name = "${var.project_name}-monitoring-alerts"
+  }
+}
+
+resource "aws_sns_topic_subscription" "monitoring_alerts_email" {
+  topic_arn = aws_sns_topic.monitoring_alerts.arn
+  protocol  = "email"
+  endpoint  = var.monitoring_alert_email
+}
+
+resource "aws_iam_policy" "monitoring_alerts_publish" {
+  name        = "${var.project_name}-monitoring-alerts-publish-policy"
+  description = "Allows Alertmanager to publish CloudMart monitoring alerts to SNS"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "sns:Publish"
+        ]
+        Resource = aws_sns_topic.monitoring_alerts.arn
+      }
+    ]
+  })
+}

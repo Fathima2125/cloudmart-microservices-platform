@@ -44,7 +44,8 @@ module "eks" {
 module "messaging" {
   source = "../../modules/messaging"
 
-  project_name = var.project_name
+  project_name           = var.project_name
+  monitoring_alert_email = var.monitoring_alert_email
 }
 
 module "rds" {

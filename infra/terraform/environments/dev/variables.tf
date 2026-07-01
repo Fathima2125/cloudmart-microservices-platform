@@ -28,3 +28,8 @@ variable "github_actions_role_arn" {
   type        = string
   default     = ""
 }
+
+variable "monitoring_alert_email" {
+  description = "Email address subscribed to CloudMart monitoring alerts"
+  type        = string
+}

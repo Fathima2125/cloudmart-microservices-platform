@@ -9,3 +9,11 @@ output "notification_events_queue_url" {
 output "notification_events_queue_arn" {
   value = aws_sqs_queue.notification_events.arn
 }
+
+output "monitoring_alerts_topic_arn" {
+  value = aws_sns_topic.monitoring_alerts.arn
+}
+
+output "monitoring_alerts_publish_policy_arn" {
+  value = aws_iam_policy.monitoring_alerts_publish.arn
+}

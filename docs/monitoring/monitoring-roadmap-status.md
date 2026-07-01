@@ -160,19 +160,56 @@ Then check:
 http://localhost:9093
 ```
 
-## Remaining: Alertmanager Receivers
+## Completed: Alertmanager Receiver With SNS Email
 
-The next alerting step is choosing where alerts should be sent.
+CloudMart now has an Alertmanager receiver configured through `AlertmanagerConfig`.
 
-Recommended beginner options:
+Receiver file:
 
 ```text
-Option 1: Email
-Option 2: Slack webhook
-Option 3: AWS SNS topic
+infra/helm/cloudmart/templates/monitoring/cloudmart-alertmanager-config.yaml
 ```
 
-For a cloud/DevOps resume project, SNS is a strong choice because it connects monitoring to AWS-native alert delivery.
+Terraform creates:
+
+```text
+SNS topic: cloudmart-monitoring-alerts
+Email subscription: fathimayosra25@gmail.com
+IAM policy: cloudmart-monitoring-alerts-publish-policy
+```
+
+Alertmanager publishes alerts to SNS. SNS then sends the alerts to email.
+
+Important:
+
+```text
+The SNS email subscription must be confirmed from the email inbox before alert emails are delivered.
+```
+
+Verify the subscription:
+
+```bash
+aws sns list-subscriptions-by-topic \
+  --topic-arn arn:aws:sns:us-east-1:506098131053:cloudmart-monitoring-alerts \
+  --region us-east-1
+```
+
+If it shows `PendingConfirmation`, open the AWS SNS confirmation email and click Confirm.
+
+Verify the receiver object:
+
+```bash
+kubectl get alertmanagerconfig -n cloudmart
+kubectl get serviceaccount monitoring-kube-prometheus-alertmanager -n monitoring -o yaml
+```
+
+The service account should have an annotation like:
+
+```text
+eks.amazonaws.com/role-arn: arn:aws:iam::506098131053:role/...
+```
+
+This is IRSA. It allows Alertmanager to publish to SNS without storing AWS access keys in Kubernetes.
 
 ## Remaining: CloudWatch Logs
 
@@ -215,4 +252,3 @@ CloudMart Pod Logs
         v
 CloudWatch Logs
 ```
-

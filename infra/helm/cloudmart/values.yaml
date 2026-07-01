@@ -31,6 +31,25 @@ monitoring:
     enabled: true
     labels:
       release: monitoring
+  alertmanagerConfig:
+    enabled: true
+    receiverName: cloudmart-sns-alerts
+    groupWait: 30s
+    groupInterval: 5m
+    repeatInterval: 2h
+    sns:
+      enabled: true
+      topicArn: arn:aws:sns:us-east-1:506098131053:cloudmart-monitoring-alerts
+      region: us-east-1
+      subject: CloudMart monitoring alert
+    email:
+      enabled: false
+      to: fathimayosra25@gmail.com
+      from: ""
+      smarthost: ""
+      authUsername: ""
+      authPasswordSecretName: cloudmart-alertmanager-email-secret
+      authPasswordSecretKey: smtp-password
 
 images:
   authService:
