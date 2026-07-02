@@ -22,7 +22,7 @@ infra/argocd/cloudmart-application.yaml
 Important settings:
 
 ```yaml
-repoURL: https://github.com/Fathima2125/ecommerce-platform.git
+repoURL: https://github.com/Fathima2125/cloudmart-microservices-platform.git
 targetRevision: main
 path: infra/helm/cloudmart
 destination:
