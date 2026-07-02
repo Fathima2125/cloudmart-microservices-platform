@@ -21,6 +21,10 @@ The focus of this project is not only building an e-commerce app, but showing ho
 
 ## Architecture
 
+![CloudMart microservice architecture](docs/architecture/Architecture%20Diagram%20for%20microservice.png)
+
+High-level flow:
+
 ```text
 Users
   |
