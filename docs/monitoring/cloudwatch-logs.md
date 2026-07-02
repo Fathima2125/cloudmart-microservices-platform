@@ -239,34 +239,37 @@ auth-service
 
 Take screenshots of:
 
-```text
+
 1. Terraform apply output showing CloudWatch log group and IAM policy
+![alt text](<../aws/screenshots/ Terraform apply output showing CloudWatch log group and IAM policy.png>)
+
+
 2. kubectl get pods -n amazon-cloudwatch -o wide
+![alt text](<../aws/screenshots/kubectl get pods -n amazon-cloudwatch -o wide.png>)
+
 3. kubectl get serviceaccount aws-for-fluent-bit -n amazon-cloudwatch -o yaml
+![alt text](<../aws/screenshots/kubectl get serviceaccount aws-for-fluent-bit -n amazon-cloudwatch -o yaml.png>)
+
 4. kubectl logs -n amazon-cloudwatch daemonset/aws-for-fluent-bit --tail=120
+![alt text](<../aws/screenshots/kubectl logs -n amazon-cloudwatch daemonset:aws-for-fluent-bit --tail=120.png>)
+
 5. AWS CloudWatch log group: /aws/eks/cloudmart/application
+![alt text](<../aws/screenshots/AWS CloudWatch log :aws:eks:cloudmart:application.png>)
+
 6. CloudWatch log streams showing CloudMart pods
+![alt text](<../aws/screenshots/ CloudWatch log streams showing CloudMart pods.png>)
+
 7. Sample product-service log event in CloudWatch
-```
+![alt text](<../aws/screenshots/ Sample product-service log event in CloudWatch.png>)
 
-For the service account screenshot, show:
+8. eks.amazonaws.com/role-arn
+![alt text](<../aws/screenshots/ eks.amazonaws:role-arn.png>)
 
-```text
-eks.amazonaws.com/role-arn
-```
 
-For the CloudWatch sample event screenshot, show Kubernetes metadata:
 
-```text
-namespace_name: cloudmart
-pod_name
-container_name
-container_image
-```
+## NOTE
 
-## What To Say In README
 
-```text
 Integrated Amazon CloudWatch Logs with CloudMart on EKS using aws-for-fluent-bit. Pod logs are collected from EKS worker nodes and shipped to the CloudWatch log group /aws/eks/cloudmart/application. IAM permissions are provided using IRSA, so no AWS access keys are stored in Kubernetes. Logs include Kubernetes metadata such as namespace, pod name, container name, and container image.
 ```
 
