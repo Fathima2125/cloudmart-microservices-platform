@@ -62,7 +62,10 @@ spec:
             description: "{{`{{ $labels.pod }}`}} restarted during the last 15 minutes."
 
         - alert: CloudMartPodNotReady
-          expr: kube_pod_status_ready{namespace="{{ .Release.Namespace }}", condition="true"} == 0
+          expr: |
+            kube_pod_status_ready{namespace="{{ .Release.Namespace }}", condition="true"} == 0
+            and on(namespace, pod)
+            kube_pod_status_phase{namespace="{{ .Release.Namespace }}", phase="Running"} == 1
           for: 5m
           labels:
             severity: warning
