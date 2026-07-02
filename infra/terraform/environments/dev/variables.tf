@@ -33,3 +33,9 @@ variable "monitoring_alert_email" {
   description = "Email address subscribed to CloudMart monitoring alerts"
   type        = string
 }
+
+variable "cloudwatch_log_retention_days" {
+  description = "CloudWatch log retention in days"
+  type        = number
+  default     = 7
+}

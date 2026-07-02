@@ -67,3 +67,10 @@ module "elasticache" {
   private_subnet_ids = module.vpc.private_subnet_ids
   redis_sg_id        = module.security_groups.redis_sg_id
 }
+
+module "logging" {
+  source = "../../modules/logging"
+
+  project_name                  = var.project_name
+  cloudwatch_log_retention_days = var.cloudwatch_log_retention_days
+}

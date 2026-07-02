@@ -69,3 +69,11 @@ output "monitoring_alerts_topic_arn" {
 output "monitoring_alerts_publish_policy_arn" {
   value = module.messaging.monitoring_alerts_publish_policy_arn
 }
+
+output "cloudwatch_log_group_name" {
+  value = module.logging.cloudwatch_log_group_name
+}
+
+output "fluent_bit_cloudwatch_policy_arn" {
+  value = module.logging.fluent_bit_cloudwatch_policy_arn
+}
