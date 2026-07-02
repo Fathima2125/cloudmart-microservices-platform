@@ -128,7 +128,7 @@ Commit and push the service/Helm changes:
 ```bash
 git add .
 git commit -m "Add SNS and SQS event-driven notifications"
-git push origin develop
+git push origin main
 ```
 
 GitHub Actions will build and push new images, update `values.yaml`, and Argo CD will deploy the new version.

@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - develop
     paths-ignore:
       - "infra/helm/cloudmart/values.yaml"
   workflow_dispatch:

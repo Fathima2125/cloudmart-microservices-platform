@@ -159,7 +159,7 @@ GitHub Actions workflow:
 Pipeline flow:
 
 ```text
-Push to develop/main
+Push to main
   |
   v
 Checkout source
@@ -218,7 +218,7 @@ GitOps flow:
 GitHub Actions updates Helm image tags
   |
   v
-Commit pushed to develop
+Commit pushed to main
   |
   v
 Argo CD detects Git change

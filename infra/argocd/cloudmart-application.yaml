@@ -8,7 +8,7 @@ spec:
 
   source:
     repoURL: https://github.com/Fathima2125/ecommerce-platform.git
-    targetRevision: develop
+    targetRevision: main
     path: infra/helm/cloudmart
 
   destination:

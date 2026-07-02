@@ -23,7 +23,7 @@ Important settings:
 
 ```yaml
 repoURL: https://github.com/Fathima2125/ecommerce-platform.git
-targetRevision: develop
+targetRevision: main
 path: infra/helm/cloudmart
 destination:
   namespace: cloudmart
@@ -32,7 +32,7 @@ destination:
 The `targetRevision` must match the branch where the Helm chart exists. For the current CloudMart workflow, that branch is:
 
 ```text
-develop
+main
 ```
 
 If Argo CD shows:

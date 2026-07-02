@@ -25,8 +25,8 @@ Make sure your work is committed and pushed.
 git status
 git add .
 git commit -m "Update CloudMart documentation"
-git pull --rebase origin develop
-git push origin develop
+git pull --rebase origin main
+git push origin main
 ```
 
 If Git says there is nothing to commit, continue.
@@ -195,4 +195,3 @@ When you want to work again, follow:
 ```text
 docs/aws/redeploy-after-terraform-destroy.md
 ```
-
