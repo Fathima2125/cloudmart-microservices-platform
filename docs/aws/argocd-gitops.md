@@ -1,6 +1,20 @@
 # CloudMart Argo CD GitOps
 
-This phase moves CloudMart deployment responsibility from GitHub Actions to Argo CD.
+## Argo CD GitOps Deployment
+
+CloudMart uses Argo CD to implement GitOps-based continuous delivery on Amazon EKS.
+
+The CI/CD pipeline builds Docker images for all microservices, scans the source code and Docker images using Trivy, and pushes the approved images to Amazon ECR. Instead of deploying directly to the cluster, GitHub Actions updates the Helm chart image tags in Git.
+
+Argo CD continuously watches the Helm chart stored in the GitHub repository. When a new image tag is committed, Argo CD detects the change and automatically syncs the desired state to the EKS cluster.
+
+This separates CI and CD responsibilities:
+
+- GitHub Actions: build, scan, and push images
+- Amazon ECR: store container images
+- Argo CD: deploy and reconcile Kubernetes resources
+- Amazon EKS: run the CloudMart application
+
 
 ```text
 Developer pushes code
@@ -22,8 +36,8 @@ infra/argocd/cloudmart-application.yaml
 Important settings:
 
 ```yaml
-repoURL: https://github.com/Fathima2125/cloudmart-microservices-platform.git
-targetRevision: main
+repoURL: https://github.com/Fathima2125/ecommerce-platform.git
+targetRevision: develop
 path: infra/helm/cloudmart
 destination:
   namespace: cloudmart
@@ -32,7 +46,7 @@ destination:
 The `targetRevision` must match the branch where the Helm chart exists. For the current CloudMart workflow, that branch is:
 
 ```text
-main
+develop
 ```
 
 If Argo CD shows:

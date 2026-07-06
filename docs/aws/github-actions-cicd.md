@@ -241,3 +241,6 @@ curl http://<ALB-DNS-NAME>/api/v1/products
 ## Important Note
 
 This workflow expects the AWS infrastructure to be running. If you run `terraform destroy`, the workflow cannot deploy until you run `terraform apply` again and recreate the required EKS/RDS/Redis resources.
+
+### NOTE:
+Configured Trivy as a CI/CD security gate. In learning/reporting mode, Trivy reports vulnerabilities without blocking deployment. When exit-code is set to 1, the pipeline fails on HIGH or CRITICAL findings, preventing vulnerable images from being pushed/deployed.
